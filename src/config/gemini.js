@@ -1,17 +1,8 @@
-// Step 1: Create a .env file in your root directory
-// .env
-VITE_GEMINI_API_KEY="AIzaSyBU-EQeDuVYLRMd4up8BxzJ1mML5N1ksIE"
-
-// Step 2: Add .env to your .gitignore file
-// .gitignore (add this line)
-.env
-
-// Step 3: Update src/config/gemini.js
 // src/config/gemini.js
 import { GoogleGenerativeAI } from "@google/genai";
 
-// Use environment variable instead of hardcoding
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+// Use environment variable
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyBU-EQeDuVYLRMd4up8BxzJ1mML5N1ksIE";
 const MODEL_NAME = "gemini-pro";
 
 async function runChat(prompt) {
@@ -33,9 +24,14 @@ async function runChat(prompt) {
         generationConfig
     });
 
-    const result = await generativeModel.generateContent(prompt);
-    const response = result.response;
-    return response.text();
+    try {
+        const result = await generativeModel.generateContent(prompt);
+        const response = result.response;
+        return response.text();
+    } catch (error) {
+        console.error("Error generating content:", error);
+        return "Sorry, I encountered an error. Please try again.";
+    }
 }
 
 export default runChat;
