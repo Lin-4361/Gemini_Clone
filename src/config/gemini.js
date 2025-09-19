@@ -1,8 +1,13 @@
 // src/config/gemini.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// You'll need to get your API key from https://makersuite.google.com/app/apikey
-const apiKey = "AIzaSyAzfwZOL3HMgILdDrgy8fL_syKLLLSD0co";
+// Get API key from environment variable
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+    console.error("Gemini API key is not set! Please add VITE_GEMINI_API_KEY to your .env file");
+}
+
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
